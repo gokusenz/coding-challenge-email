@@ -1,0 +1,14 @@
+version: '2'
+
+services:
+
+# ### Golang Container #########################################
+
+    email-service:
+        # image: test
+        # restart: always
+        build:
+            context: ./src/email
+        ports:
+            - "80:80"
+            # - "443:443"
