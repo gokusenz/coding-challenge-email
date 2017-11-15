@@ -9,12 +9,12 @@ import (
 func TestSetContent(t *testing.T) {
 
 	expected := &mail.Email{
-		To:      "example@gmail.com",
-		From:    "nattawut.ru@gmail.com",
+		To:      "nattawut.ru@gmail.com",
+		From:    "gokusen.regis@gmail.com",
 		Subject: "Test",
 		Body:    "Test Set",
-		Cc:      "nattawut.cc@gmail.com",
-		Bcc:     "nattawut.bcc@gmail.com",
+		Cc:      "gokusen.regis@gmail.com",
+		Bcc:     "gokusen.regis@gmail.com",
 	}
 
 	e := mail.New()

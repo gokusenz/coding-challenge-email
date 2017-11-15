@@ -41,6 +41,7 @@ func (e *Email) Set(To string, From string, Subject string, Body string, Cc stri
 	}
 }
 
+// Send method
 func (e *Email) Send() error {
 
 	resp, err := mailGun(e)
