@@ -6,13 +6,10 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/sendgrid/sendgrid-go"
+	sendgrid "github.com/sendgrid/sendgrid-go"
 	helpers "github.com/sendgrid/sendgrid-go/helpers/mail"
 	"gopkg.in/mailgun/mailgun-go.v1"
 )
-
-var mg = mailgun.NewMailgun(os.Getenv("MG_DOMAIN"), os.Getenv("MG_API_KEY"), os.Getenv("MG_PUBLIC_API_KEY"))
-var sg = sendgrid.NewSendClient(os.Getenv("SG_API_KEY"))
 
 // Email represents an email.
 type Email struct {
@@ -24,13 +21,13 @@ type Email struct {
 	Bcc     string
 }
 
-// New Email
-func New() *Email {
-	return &Email{}
+type Emailer interface {
+	mailGun() (string, error)
+	sendGrid() (string, error)
 }
 
-// Set method
-func (e *Email) Set(To string, From string, Subject string, Body string, Cc string, Bcc string) *Email {
+// New method
+func New(To string, From string, Subject string, Body string, Cc string, Bcc string) *Email {
 	return &Email{
 		To:      To,
 		From:    From,
@@ -42,21 +39,22 @@ func (e *Email) Set(To string, From string, Subject string, Body string, Cc stri
 }
 
 // Send method
-func (e *Email) Send() error {
-
-	resp, err := mailGun(e)
+func (e *Email) Send(el Emailer) error {
+	log.Println("SEND")
+	resp, err := el.mailGun()
 	if err != nil {
 		log.Fatal(err)
-		resp, err = sendGrid(e)
-		if err != nil {
-			log.Fatal(err)
-		}
+		// resp, err = el.sendGrid()
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
 	}
 	fmt.Println(resp)
 	return nil
 }
 
-func mailGun(e *Email) (string, error) {
+func (e *Email) mailGun() (string, error) {
+	mg := mailgun.NewMailgun(os.Getenv("MG_DOMAIN"), os.Getenv("MG_API_KEY"), os.Getenv("MG_PUBLIC_API_KEY"))
 	message := mailgun.NewMessage(
 		e.From,
 		e.Subject,
@@ -71,8 +69,8 @@ func mailGun(e *Email) (string, error) {
 	return resp, nil
 }
 
-func sendGrid(e *Email) (string, error) {
-
+func (e *Email) sendGrid() (string, error) {
+	sg := sendgrid.NewSendClient(os.Getenv("SG_API_KEY"))
 	from := helpers.NewEmail(e.From, e.From)
 	subject := e.Subject
 	to := helpers.NewEmail(e.To, e.To)

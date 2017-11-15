@@ -1,6 +1,8 @@
 package main
 
 import (
+	"email/mail"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -25,8 +27,15 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	http.HandleFunc("/email", responseEmail)
-	http.ListenAndServe(":80", nil)
+	// http.HandleFunc("/email", responseEmail)
+	// http.ListenAndServe(":80", nil)
+
+	e := mail.New("nattawut.ru@gmail.com", "gokusen.regis@gmail.com", "Test", "Test Set", "gokusen.regis@gmail.com", "gokusen.regis@gmail.com")
+	// el := mail.EmailInfoer{}
+	resp := e.Send(e)
+
+	fmt.Println(resp)
+
 }
 
 func errResponse(rw http.ResponseWriter) {
