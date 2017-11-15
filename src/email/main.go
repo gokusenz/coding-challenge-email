@@ -1,7 +1,10 @@
 package main
 
 import (
+	"log"
 	"net/http"
+
+	"github.com/joho/godotenv"
 )
 
 func responseEmail(rw http.ResponseWriter, r *http.Request) {
@@ -16,6 +19,12 @@ func main() {
 	// 		os.Exit(1)
 	// 	}
 	// }()
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	http.HandleFunc("/email", responseEmail)
 	http.ListenAndServe(":80", nil)
 }
