@@ -26,18 +26,6 @@ type Emailer interface {
 	sendGrid(e *Email) (int, error)
 }
 
-// New method
-func New(To string, From string, Subject string, Body string, Cc string, Bcc string) *Email {
-	return &Email{
-		To:      To,
-		From:    From,
-		Subject: Subject,
-		Body:    Body,
-		Cc:      Cc,
-		Bcc:     Bcc,
-	}
-}
-
 // Send method
 func Send(el Emailer, e *Email) (int, error) {
 	respCode, err := el.mailGun(e)
