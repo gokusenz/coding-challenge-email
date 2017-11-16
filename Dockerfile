@@ -13,4 +13,6 @@ COPY ./src/email .
 RUN glide install && \
     go install .
 
+EXPOSE 8080
+
 CMD ["email"]

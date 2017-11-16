@@ -3,20 +3,29 @@ package main
 import (
 	"email/mail"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 )
 
-func responseEmail(rw http.ResponseWriter, req *http.Request) {
-	defer req.Body.Close()
-	decoder := json.NewDecoder(req.Body)
+func handler(rw http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(rw, "Welcome!")
+}
+
+func handlerEmail(rw http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
+	t1 := time.Now()
+	decoder := json.NewDecoder(r.Body)
 	var e *mail.Email
 	err := decoder.Decode(&e)
 	if err != nil {
 		log.Println(err)
 		rw.WriteHeader(400)
+		rw.Write([]byte("Error"))
 	} else {
 		log.Println(e.Subject)
 		el := mail.EmailInfoer{}
@@ -25,24 +34,28 @@ func responseEmail(rw http.ResponseWriter, req *http.Request) {
 			log.Println(err)
 		}
 		rw.WriteHeader(resp)
+		rw.Write([]byte("Success"))
 	}
+	t2 := time.Now()
+	log.Printf("[%s] %q %v\n", r.Method, r.URL.String(), t2.Sub(t1))
 }
 
 func main() {
-	// defer func() {
-	// 	if err := recover(); err != nil {
-	// 		fmt.Fprintf(os.Stderr, "Exception: %v\n", err)
-	// 		os.Exit(1)
-	// 	}
-	// }()
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Fprintf(os.Stderr, "Exception: %v\n", err)
+			os.Exit(1)
+		}
+	}()
 
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	http.HandleFunc("/email", responseEmail)
-	http.ListenAndServe(":80", nil)
+	http.HandleFunc("/", handler)
+	http.HandleFunc("/email", handlerEmail)
+	http.ListenAndServe(":8080", nil)
 
 	// e := &mail.Email{
 	// 	To:      "nattawut.ru@gmail.com",
