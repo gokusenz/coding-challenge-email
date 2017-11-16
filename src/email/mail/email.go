@@ -1,10 +1,8 @@
 package mail
 
 import (
-	"fmt"
 	"log"
 	"os"
-	"strconv"
 
 	sendgrid "github.com/sendgrid/sendgrid-go"
 	helpers "github.com/sendgrid/sendgrid-go/helpers/mail"
@@ -24,8 +22,8 @@ type Email struct {
 type EmailInfoer struct{}
 
 type Emailer interface {
-	mailGun(e *Email) (string, error)
-	sendGrid(e *Email) (string, error)
+	mailGun(e *Email) (int, error)
+	sendGrid(e *Email) (int, error)
 }
 
 // New method
@@ -41,37 +39,36 @@ func New(To string, From string, Subject string, Body string, Cc string, Bcc str
 }
 
 // Send method
-func Send(el Emailer, e *Email) (string, error) {
-	resp, err := el.mailGun(e)
+func Send(el Emailer, e *Email) (int, error) {
+	respCode, err := el.mailGun(e)
 	if err != nil {
 		log.Println(err)
-		resp, err = el.sendGrid(e)
+		respCode, err = el.sendGrid(e)
 		if err != nil {
 			log.Println(err)
-			return resp, err
+			return respCode, err
 		}
 	}
-	// fmt.Println(resp)
-	return resp, nil
+	return respCode, nil
 }
 
-func (el EmailInfoer) mailGun(e *Email) (string, error) {
+func (el EmailInfoer) mailGun(e *Email) (int, error) {
 	mg := mailgun.NewMailgun(os.Getenv("MG_DOMAIN"), os.Getenv("MG_API_KEY"), os.Getenv("MG_PUBLIC_API_KEY"))
 	message := mailgun.NewMessage(
 		e.From,
 		e.Subject,
 		e.Body,
 		e.To)
-	resp, id, err := mg.Send(message)
+	_, _, err := mg.Send(message)
+	statusCode := 202
 	if err != nil {
 		log.Fatal(err)
-		return resp, err
+		statusCode = 400
 	}
-	fmt.Printf("ID: %s Resp: %s\n", id, resp)
-	return resp, nil
+	return statusCode, nil
 }
 
-func (el EmailInfoer) sendGrid(e *Email) (string, error) {
+func (el EmailInfoer) sendGrid(e *Email) (int, error) {
 	sg := sendgrid.NewSendClient(os.Getenv("SG_API_KEY"))
 	from := helpers.NewEmail(e.From, e.From)
 	subject := e.Subject
@@ -80,14 +77,8 @@ func (el EmailInfoer) sendGrid(e *Email) (string, error) {
 	htmlContent := e.Body
 	message := helpers.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
 	response, err := sg.Send(message)
-	i := strconv.Itoa(response.StatusCode)
 	if err != nil {
 		log.Println(err)
-
-		return i, err
 	}
-	// fmt.Println(response.StatusCode)
-	// fmt.Println(response.Body)
-	// fmt.Println(response.Headers)
-	return i, nil
+	return response.StatusCode, nil
 }

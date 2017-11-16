@@ -11,22 +11,22 @@ type FakeEmailer struct {
 	SendGrid string
 }
 
-func (f FakeEmailer) mailGun(e *Email) (string, error) {
+func (f FakeEmailer) mailGun(e *Email) (int, error) {
 	if f.MailGun == "" {
 		err := errors.New("Error")
-		return "400", err
+		return 400, err
 	}
 
-	return "202", nil
+	return 202, nil
 }
 
-func (f FakeEmailer) sendGrid(e *Email) (string, error) {
+func (f FakeEmailer) sendGrid(e *Email) (int, error) {
 	if f.SendGrid == "" {
 		err := errors.New("Error")
-		return "400", err
+		return 400, err
 	}
 
-	return "202", nil
+	return 202, nil
 }
 
 func TestSetEmail(t *testing.T) {
@@ -49,7 +49,7 @@ func TestSetEmail(t *testing.T) {
 }
 
 func TestSendEmailSuccessWithMailgun(t *testing.T) {
-	expected := "202"
+	expected := 202
 
 	f := FakeEmailer{
 		MailGun: "Success",
@@ -63,7 +63,7 @@ func TestSendEmailSuccessWithMailgun(t *testing.T) {
 }
 
 func TestSendEmailSuccessWithSendGrid(t *testing.T) {
-	expected := "202"
+	expected := 202
 
 	f := FakeEmailer{
 		SendGrid: "Success",
@@ -77,7 +77,7 @@ func TestSendEmailSuccessWithSendGrid(t *testing.T) {
 }
 
 func TestSendEmailAllFail(t *testing.T) {
-	expected := "400"
+	expected := 400
 	expectedErr := errors.New("Error")
 
 	f := FakeEmailer{}
