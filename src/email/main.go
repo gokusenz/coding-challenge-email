@@ -2,6 +2,7 @@ package main
 
 import (
 	"email/mail"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,9 +10,23 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func responseEmail(rw http.ResponseWriter, r *http.Request) {
-	rw.WriteHeader(200)
-	rw.Write([]byte("Email"))
+func responseEmail(rw http.ResponseWriter, req *http.Request) {
+	defer req.Body.Close()
+	decoder := json.NewDecoder(req.Body)
+	var e *mail.Email
+	err := decoder.Decode(&e)
+	if err != nil {
+		log.Println(err)
+		rw.WriteHeader(400)
+	} else {
+		log.Println(e.Subject)
+		el := mail.EmailInfoer{}
+		resp, err := mail.Send(el, e)
+		if err != nil {
+			log.Println(err)
+		}
+		rw.WriteHeader(resp)
+	}
 }
 
 func main() {
