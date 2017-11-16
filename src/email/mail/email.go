@@ -45,11 +45,12 @@ func Send(el Emailer, e *Email) (string, error) {
 	log.Println("SEND")
 	resp, err := el.mailGun(e)
 	if err != nil {
-		log.Fatal(err)
-		// resp, err = el.sendGrid(e)
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
+		log.Println(err)
+		resp, err = el.sendGrid(e)
+		if err != nil {
+			log.Println(err)
+			return resp, err
+		}
 	}
 	fmt.Println(resp)
 	return resp, nil
@@ -77,7 +78,7 @@ func (el EmailInfoer) sendGrid(e *Email) (string, error) {
 	subject := e.Subject
 	to := helpers.NewEmail(e.To, e.To)
 	plainTextContent := e.Body
-	htmlContent := ""
+	htmlContent := e.Body
 	message := helpers.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
 	response, err := sg.Send(message)
 	i := strconv.Itoa(response.StatusCode)

@@ -7,25 +7,26 @@ import (
 )
 
 type FakeEmailer struct {
-	To string
+	MailGun  string
+	SendGrid string
 }
 
 func (f FakeEmailer) mailGun(e *Email) (string, error) {
-	if f.To == "" {
-		err := errors.New("Error")
-		return "", err
-	}
-
-	return "200", nil
-}
-
-func (f FakeEmailer) sendGrid(e *Email) (string, error) {
-	if f.To == "" {
+	if f.MailGun == "" {
 		err := errors.New("Error")
 		return "500", err
 	}
 
-	return "200", nil
+	return "202", nil
+}
+
+func (f FakeEmailer) sendGrid(e *Email) (string, error) {
+	if f.SendGrid == "" {
+		err := errors.New("Error")
+		return "500", err
+	}
+
+	return "202", nil
 }
 
 func TestSetEmail(t *testing.T) {
@@ -48,11 +49,25 @@ func TestSetEmail(t *testing.T) {
 }
 
 func TestSendEmailSuccessWithMailgun(t *testing.T) {
-	expected := "200"
+	expected := "202"
 	// expected := errors.New("Error")
 
 	f := FakeEmailer{
-		To: "nattawut.ru@gmail.com",
+		MailGun: "Success",
+	}
+	result, _ := Send(f, &Email{})
+
+	if !reflect.DeepEqual(expected, result) {
+		t.Fatalf("Expected %v but got %v", expected, result)
+	}
+
+}
+
+func TestSendEmailSuccessWithSendGrid(t *testing.T) {
+	expected := "202"
+
+	f := FakeEmailer{
+		SendGrid: "Success",
 	}
 	result, _ := Send(f, &Email{})
 
