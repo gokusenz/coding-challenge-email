@@ -21,9 +21,11 @@ type Email struct {
 	Bcc     string
 }
 
+type EmailInfoer struct{}
+
 type Emailer interface {
-	mailGun() (string, error)
-	sendGrid() (string, error)
+	mailGun(e *Email) (string, error)
+	sendGrid(e *Email) (string, error)
 }
 
 // New method
@@ -39,21 +41,21 @@ func New(To string, From string, Subject string, Body string, Cc string, Bcc str
 }
 
 // Send method
-func (e *Email) Send(el Emailer) error {
+func Send(el Emailer, e *Email) (string, error) {
 	log.Println("SEND")
-	resp, err := el.mailGun()
+	resp, err := el.mailGun(e)
 	if err != nil {
 		log.Fatal(err)
-		// resp, err = el.sendGrid()
+		// resp, err = el.sendGrid(e)
 		// if err != nil {
 		// 	log.Fatal(err)
 		// }
 	}
 	fmt.Println(resp)
-	return nil
+	return resp, nil
 }
 
-func (e *Email) mailGun() (string, error) {
+func (el EmailInfoer) mailGun(e *Email) (string, error) {
 	mg := mailgun.NewMailgun(os.Getenv("MG_DOMAIN"), os.Getenv("MG_API_KEY"), os.Getenv("MG_PUBLIC_API_KEY"))
 	message := mailgun.NewMessage(
 		e.From,
@@ -69,7 +71,7 @@ func (e *Email) mailGun() (string, error) {
 	return resp, nil
 }
 
-func (e *Email) sendGrid() (string, error) {
+func (el EmailInfoer) sendGrid(e *Email) (string, error) {
 	sg := sendgrid.NewSendClient(os.Getenv("SG_API_KEY"))
 	from := helpers.NewEmail(e.From, e.From)
 	subject := e.Subject

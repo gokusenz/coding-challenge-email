@@ -31,8 +31,8 @@ func main() {
 	// http.ListenAndServe(":80", nil)
 
 	e := mail.New("nattawut.ru@gmail.com", "gokusen.regis@gmail.com", "Test", "Test Set", "gokusen.regis@gmail.com", "gokusen.regis@gmail.com")
-	// el := mail.EmailInfoer{}
-	resp := e.Send(e)
+	el := mail.EmailInfoer{}
+	resp, _ := mail.Send(el, e)
 
 	fmt.Println(resp)
 
