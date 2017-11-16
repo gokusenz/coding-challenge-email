@@ -14,7 +14,7 @@ type FakeEmailer struct {
 func (f FakeEmailer) mailGun(e *Email) (string, error) {
 	if f.MailGun == "" {
 		err := errors.New("Error")
-		return "500", err
+		return "400", err
 	}
 
 	return "202", nil
@@ -23,7 +23,7 @@ func (f FakeEmailer) mailGun(e *Email) (string, error) {
 func (f FakeEmailer) sendGrid(e *Email) (string, error) {
 	if f.SendGrid == "" {
 		err := errors.New("Error")
-		return "500", err
+		return "400", err
 	}
 
 	return "202", nil
@@ -50,7 +50,6 @@ func TestSetEmail(t *testing.T) {
 
 func TestSendEmailSuccessWithMailgun(t *testing.T) {
 	expected := "202"
-	// expected := errors.New("Error")
 
 	f := FakeEmailer{
 		MailGun: "Success",
@@ -75,4 +74,20 @@ func TestSendEmailSuccessWithSendGrid(t *testing.T) {
 		t.Fatalf("Expected %v but got %v", expected, result)
 	}
 
+}
+
+func TestSendEmailAllFail(t *testing.T) {
+	expected := "400"
+	expectedErr := errors.New("Error2")
+
+	f := FakeEmailer{}
+	result, err := Send(f, &Email{})
+
+	if !reflect.DeepEqual(expected, result) {
+		t.Fatalf("Expected %v but got %v", expected, result)
+	}
+
+	if !reflect.DeepEqual(expectedErr, err) {
+		t.Fatalf("Expected %v but got %v", expectedErr, err)
+	}
 }
