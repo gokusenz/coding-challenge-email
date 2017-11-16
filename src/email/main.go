@@ -3,7 +3,6 @@ package main
 import (
 	"email/mail"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -42,21 +41,20 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	// http.HandleFunc("/email", responseEmail)
-	// http.ListenAndServe(":80", nil)
+	http.HandleFunc("/email", responseEmail)
+	http.ListenAndServe(":80", nil)
 
-	e := &mail.Email{
-		To:      "nattawut.ru@gmail.com",
-		From:    "gokusen.regis@gmail.com",
-		Subject: "Test",
-		Body:    "Test Set",
-		Cc:      "gokusen.regis@gmail.com",
-		Bcc:     "gokusen.regis@gmail.com",
-	}
-	el := mail.EmailInfoer{}
-	resp, _ := mail.Send(el, e)
-
-	fmt.Println(resp)
+	// e := &mail.Email{
+	// 	To:      "nattawut.ru@gmail.com",
+	// 	From:    "gokusen.regis@gmail.com",
+	// 	Subject: "Test",
+	// 	Body:    "Test Set",
+	// 	Cc:      "gokusen.regis@gmail.com",
+	// 	Bcc:     "gokusen.regis@gmail.com",
+	// }
+	// el := mail.EmailInfoer{}
+	// resp, _ := mail.Send(el, e)
+	// fmt.Println(resp)
 
 }
 
