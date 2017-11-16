@@ -78,7 +78,7 @@ func TestSendEmailSuccessWithSendGrid(t *testing.T) {
 
 func TestSendEmailAllFail(t *testing.T) {
 	expected := "400"
-	expectedErr := errors.New("Error2")
+	expectedErr := errors.New("Error")
 
 	f := FakeEmailer{}
 	result, err := Send(f, &Email{})

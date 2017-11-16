@@ -42,7 +42,6 @@ func New(To string, From string, Subject string, Body string, Cc string, Bcc str
 
 // Send method
 func Send(el Emailer, e *Email) (string, error) {
-	log.Println("SEND")
 	resp, err := el.mailGun(e)
 	if err != nil {
 		log.Println(err)
@@ -52,7 +51,7 @@ func Send(el Emailer, e *Email) (string, error) {
 			return resp, err
 		}
 	}
-	fmt.Println(resp)
+	// fmt.Println(resp)
 	return resp, nil
 }
 
@@ -87,8 +86,8 @@ func (el EmailInfoer) sendGrid(e *Email) (string, error) {
 
 		return i, err
 	}
-	fmt.Println(response.StatusCode)
-	fmt.Println(response.Body)
-	fmt.Println(response.Headers)
+	// fmt.Println(response.StatusCode)
+	// fmt.Println(response.Body)
+	// fmt.Println(response.Headers)
 	return i, nil
 }
