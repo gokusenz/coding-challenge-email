@@ -55,7 +55,7 @@ text     | full text content of the email to be sent
 
 Following is a sample input json:
 
-```json
+```text
 {
     'from':'test_from@mail.com',
     'to':'test_to1@mail.com',
@@ -75,7 +75,7 @@ output format: json
 
 Following is a sample output json:
 
-```json
+```text
 {'status': 0, 'message':'Success'}
 ```
 
