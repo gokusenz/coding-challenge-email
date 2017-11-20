@@ -58,13 +58,12 @@ func emailHandler(rw http.ResponseWriter, r *http.Request) {
 			return
 		}
 		el := mail.EmailInfoer{}
-		resp, err := mail.Send(el, e)
+		respCode, respMsg := mail.Send(el, e)
 		if err != nil {
 			log.Println(err)
 		}
-		log.Println(resp)
-		rw.WriteHeader(resp)
-		rw.Write([]byte("Success"))
+		log.Printf("[CODE] %v => %v", respCode, respMsg)
+		rw.Write([]byte(respMsg))
 
 	} else {
 		http.Error(rw, "Invalid request method", http.StatusMethodNotAllowed)

@@ -26,20 +26,49 @@ type Emailer interface {
 	sendGrid(e *Email) (int, error)
 }
 
-// Send method
-func Send(el Emailer, e *Email) (int, error) {
+// Send : This is to send email by the email sender class and failover.
+// Validate the from, to email address. Validate the subject and email content text.
+// It will return an status code and message.
+// Status  message
+// 0       success
+// 1       from email address invalid
+// 2       no valid to email address
+// 3       subject or text both are empty
+// 4       all email sender failed
+func Send(el Emailer, e *Email) (int, string) {
+
+	if e.From == "" {
+		return 1, "from email address invalid"
+	}
+
+	if e.To == "" {
+		return 2, "To email address invalid"
+	}
+
+	if e.Subject == "" || e.Body == "" {
+		return 3, "Subject or text invalid"
+	}
+
 	respCode, err := el.mailGun(e)
 	if err != nil {
 		log.Println(err)
+		// Failover to another email service provider.
 		respCode, err = el.sendGrid(e)
 		if err != nil {
 			log.Println(err)
-			return respCode, err
 		}
 	}
-	return respCode, nil
+
+	if respCode == 202 {
+		return 0, "Success"
+	}
+	return 4, err.Error()
+
 }
 
+// mailGun : This is the email sender using the MailGun implementation.
+// return 202 if the sending success
+// return 400 if the sending failed
 func (el EmailInfoer) mailGun(e *Email) (int, error) {
 	mg := mailgun.NewMailgun(os.Getenv("MG_DOMAIN"), os.Getenv("MG_API_KEY"), os.Getenv("MG_PUBLIC_API_KEY"))
 	message := mailgun.NewMessage(
@@ -56,6 +85,9 @@ func (el EmailInfoer) mailGun(e *Email) (int, error) {
 	return statusCode, nil
 }
 
+// sendGrid : This is the email sender using the SendGrid implementation.
+// return 202 if the sending success
+// return 400 if the sending failed
 func (el EmailInfoer) sendGrid(e *Email) (int, error) {
 	sg := sendgrid.NewSendClient(os.Getenv("SG_API_KEY"))
 	from := helpers.NewEmail(e.From, e.From)
