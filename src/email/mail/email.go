@@ -62,7 +62,7 @@ func Send(el Emailer, e *Email) (int, string) {
 	if respCode == 202 {
 		return 0, "Success"
 	}
-	return 4, err.Error()
+	return 4, "'Emails failed in sending. The error message is as followed: " + err.Error()
 
 }
 
