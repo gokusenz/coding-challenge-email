@@ -73,6 +73,66 @@ func TestSendEmailSuccessWithSendGrid(t *testing.T) {
 
 }
 
+func TestSendEmailFailWithFromInvalid(t *testing.T) {
+	expected := 1
+
+	f := FakeEmailer{}
+
+	e := Email{
+		From:    "",
+		To:      "test@gmail.com",
+		Subject: "tester",
+		Body:    "tester",
+	}
+
+	result, _ := Send(f, &e)
+
+	if !reflect.DeepEqual(expected, result) {
+		t.Fatalf("Expected %v but got %v", expected, result)
+	}
+
+}
+
+func TestSendEmailFailWithToInvalid(t *testing.T) {
+	expected := 2
+
+	f := FakeEmailer{}
+
+	e := Email{
+		From:    "test@gmail.com",
+		To:      "",
+		Subject: "tester",
+		Body:    "tester",
+	}
+
+	result, _ := Send(f, &e)
+
+	if !reflect.DeepEqual(expected, result) {
+		t.Fatalf("Expected %v but got %v", expected, result)
+	}
+
+}
+
+func TestSendEmailFailWithSubjectInvalid(t *testing.T) {
+	expected := 3
+
+	f := FakeEmailer{}
+
+	e := Email{
+		From:    "test@gmail.com",
+		To:      "test@gmail.com",
+		Subject: "",
+		Body:    "tester",
+	}
+
+	result, _ := Send(f, &e)
+
+	if !reflect.DeepEqual(expected, result) {
+		t.Fatalf("Expected %v but got %v", expected, result)
+	}
+
+}
+
 func TestSendEmailAllFail(t *testing.T) {
 	expected := 4
 	expectedMsg := "Emails failed in sending. The error message is as followed: Error"
