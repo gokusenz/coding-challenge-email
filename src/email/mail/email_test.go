@@ -133,8 +133,28 @@ func TestSendEmailFailWithSubjectInvalid(t *testing.T) {
 
 }
 
-func TestSendEmailAllFail(t *testing.T) {
+func TestSendEmailFailWithBodyInvalid(t *testing.T) {
 	expected := 4
+
+	f := FakeEmailer{}
+
+	e := Email{
+		From:    "test@gmail.com",
+		To:      "test@gmail.com",
+		Subject: "tester",
+		Body:    "",
+	}
+
+	result, _ := Send(f, &e)
+
+	if !reflect.DeepEqual(expected, result) {
+		t.Fatalf("Expected %v but got %v", expected, result)
+	}
+
+}
+
+func TestSendEmailAllFail(t *testing.T) {
+	expected := 5
 	expectedMsg := "Emails failed in sending. The error message is as followed: Error"
 
 	f := FakeEmailer{}

@@ -34,7 +34,8 @@ type Emailer interface {
 // 1       from email address invalid
 // 2       no valid to email address
 // 3       subject or text both are empty
-// 4       all email sender failed
+// 4       subject or text both are empty
+// 5       all email sender failed
 func Send(el Emailer, e *Email) (int, string) {
 
 	if e.From == "" {
@@ -45,8 +46,12 @@ func Send(el Emailer, e *Email) (int, string) {
 		return 2, "To email address invalid"
 	}
 
-	if e.Subject == "" || e.Body == "" {
-		return 3, "Subject or text invalid"
+	if e.Subject == "" {
+		return 3, "Subject invalid"
+	}
+
+	if e.Body == "" {
+		return 4, "Body invalid"
 	}
 
 	respCode, err := el.mailGun(e)
@@ -62,7 +67,7 @@ func Send(el Emailer, e *Email) (int, string) {
 	if respCode == 202 {
 		return 0, "Success"
 	}
-	return 4, "Emails failed in sending. The error message is as followed: " + err.Error()
+	return 5, "Emails failed in sending. The error message is as followed: " + err.Error()
 
 }
 
