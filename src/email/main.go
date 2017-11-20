@@ -90,8 +90,3 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 
 }
-
-func errResponse(rw http.ResponseWriter) {
-	rw.WriteHeader(500)
-	rw.Write([]byte("Error"))
-}
