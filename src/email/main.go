@@ -43,25 +43,33 @@ func indexHandler(rw http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(rw, "Welcome!")
 }
 
+// emailHandler
 func emailHandler(rw http.ResponseWriter, r *http.Request) {
-	defer r.Body.Close()
-	decoder := json.NewDecoder(r.Body)
-	var e *mail.Email
-	err := decoder.Decode(&e)
-	if err != nil {
-		log.Println(err)
-		rw.WriteHeader(400)
-		rw.Write([]byte("Error"))
-	} else {
-		log.Println(e.Subject)
+	if r.Method == "POST" {
+		defer r.Body.Close()
+		var e *mail.Email
+		if r.Body == nil {
+			http.Error(rw, "Please send a request body", 400)
+			return
+		}
+		err := json.NewDecoder(r.Body).Decode(&e)
+		if err != nil {
+			http.Error(rw, err.Error(), 400)
+			return
+		}
 		el := mail.EmailInfoer{}
 		resp, err := mail.Send(el, e)
 		if err != nil {
 			log.Println(err)
 		}
+		log.Println(resp)
 		rw.WriteHeader(resp)
 		rw.Write([]byte("Success"))
+
+	} else {
+		http.Error(rw, "Invalid request method", http.StatusMethodNotAllowed)
 	}
+
 }
 
 func main() {
@@ -81,18 +89,6 @@ func main() {
 	http.Handle("/", commonHandlers.ThenFunc(indexHandler))
 	http.Handle("/email", commonHandlers.ThenFunc(emailHandler))
 	http.ListenAndServe(":8080", nil)
-
-	// e := &mail.Email{
-	// 	To:      "nattawut.ru@gmail.com",
-	// 	From:    "gokusen.regis@gmail.com",
-	// 	Subject: "Test",
-	// 	Body:    "Test Set",
-	// 	Cc:      "gokusen.regis@gmail.com",
-	// 	Bcc:     "gokusen.regis@gmail.com",
-	// }
-	// el := mail.EmailInfoer{}
-	// resp, _ := mail.Send(el, e)
-	// fmt.Println(resp)
 
 }
 

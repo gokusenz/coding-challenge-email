@@ -11,12 +11,12 @@ import (
 
 // Email represents an email.
 type Email struct {
-	To      string
-	From    string
-	Subject string
-	Body    string
-	Cc      string
-	Bcc     string
+	To      string `json:"to"`
+	From    string `json:"from"`
+	Subject string `json:"subject"`
+	Body    string `json:"body"`
+	Cc      string `json:"cc"`
+	Bcc     string `json:"bcc"`
 }
 
 type EmailInfoer struct{}
