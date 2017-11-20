@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import EmailFormComponent from '../components/EmailForm';
+import Request from '../libs/Request';
 
 export class EmailForm extends Component {
 
@@ -18,6 +19,8 @@ export class EmailForm extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     console.log(e.target.to.value);
+    Request.post(SERVICE_CREATE_LOG, data)
+    .catch(err => console.log(err));
     // if (result) {
     //   alert('บันทึกข้อมูลเรียบร้อย')
     //   e.target.to.value = ''
