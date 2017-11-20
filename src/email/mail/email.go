@@ -33,8 +33,8 @@ type Emailer interface {
 // 0       success
 // 1       from email address invalid
 // 2       no valid to email address
-// 3       subject or text both are empty
-// 4       subject or text both are empty
+// 3       subject is empty
+// 4       text is empty
 // 5       all email sender failed
 func Send(el Emailer, e *Email) (int, string) {
 
