@@ -2,10 +2,20 @@ package main
 
 import (
 	"bytes"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/joho/godotenv"
 )
+
+func init() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+}
 
 func TestIndexHandler(t *testing.T) {
 	// Create a request to pass to our handler. We don't have any query parameters for now, so we'll
@@ -37,8 +47,13 @@ func TestIndexHandler(t *testing.T) {
 	}
 }
 
-func TestEmailHandlerWithInvalidTo(t *testing.T) {
-	var jsonStr = []byte(`{"to":""}`)
+func TestEmailHandlerSuccess(t *testing.T) {
+	var jsonStr = []byte(`{
+		"to":"gokusen.regis@gmail.com",
+		"from":"nattawut.ru@gmail.com",
+		"subject":"Test subject",
+		"body":"Test body"
+	}`)
 	req, err := http.NewRequest("POST", "/email", bytes.NewBuffer(jsonStr))
 	if err != nil {
 		t.Fatal(err)
@@ -50,7 +65,7 @@ func TestEmailHandlerWithInvalidTo(t *testing.T) {
 
 	handler.ServeHTTP(rr, req)
 
-	expected := `from email address invalid`
+	expected := `Success`
 	if rr.Body.String() != expected {
 		t.Errorf("handler returned unexpected body: got %v want %v",
 			rr.Body.String(), expected)

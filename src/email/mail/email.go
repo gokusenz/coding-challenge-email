@@ -84,7 +84,7 @@ func (el EmailInfoer) mailGun(e *Email) (int, error) {
 	_, _, err := mg.Send(message)
 	statusCode := 202
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 		statusCode = 400
 	}
 	return statusCode, nil

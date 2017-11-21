@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -72,13 +71,6 @@ func emailHandler(rw http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	defer func() {
-		if err := recover(); err != nil {
-			fmt.Fprintf(os.Stderr, "Exception: %v\n", err)
-			os.Exit(1)
-		}
-	}()
-
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
