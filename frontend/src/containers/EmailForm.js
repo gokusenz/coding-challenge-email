@@ -10,10 +10,8 @@ export class EmailForm extends Component {
       to: '',
       from: '',
       subject: '',
+      body: '',
     }
-  }
-
-  componentDidMount() {
   }
 
   handleSubmit = (e) => {
@@ -27,15 +25,15 @@ export class EmailForm extends Component {
       subject: e.target.subject.value,
       body: e.target.body.value,
     }
-    Request.put("http://localhost:8080/email", data)
-    .then(resp => console.log(resp))
+    Request.post("http://localhost:8080/email", data)
+    .then((resp) => {
+      e.target.to.value = '';
+      e.target.subject.value = '';
+      e.target.body.value = '';
+      alert('Done');
+      console.log(resp)
+    }) 
     .catch(err => console.log(err));
-    // if (result) {
-    //   alert('บันทึกข้อมูลเรียบร้อย')
-    //   e.target.to.value = ''
-    // } else {
-    //   alert('ส่งข้อมูลไม่สำเร็จ กรุณาลองใหม่อีกครั้ง')
-    // }
   }
 
   handleChange = (event, fieldName) => {

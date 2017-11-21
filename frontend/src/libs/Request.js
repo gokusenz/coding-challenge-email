@@ -3,7 +3,9 @@ import { TIMEOUT_REQUEST } from '../constants/Request';
 
 export default {
   getHeader() {
-    const headers = { Accept: 'application/json' };
+    const headers = {
+      'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8',
+    };
     return headers;
   },
 
