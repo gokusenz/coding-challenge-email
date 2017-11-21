@@ -3,7 +3,7 @@
 Email Service - for the coding challenge
 
 ## Demo
-[Live site] (https://coding-challenge-email.firebaseapp.com)
+[Demo site] (https://coding-challenge-email.firebaseapp.com)
 
 [Email service] (https://coding-challenge-email.igokuz.com)
 
