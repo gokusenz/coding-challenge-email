@@ -1,7 +1,5 @@
 import axios from 'axios';
-import { TIMEOUT_REQUEST } from '../constants/Request';
-
-const API_URL = 'http://localhost:8080';
+import { TIMEOUT_REQUEST, API_URL } from '../constants/Request';
 
 export default {
   getHeader() {

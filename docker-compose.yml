@@ -5,8 +5,6 @@ services:
 # ### Golang Container #########################################
 
     email-service:
-        # image: test
-        # restart: always
         build:
             context: .
         ports:
