@@ -16,12 +16,19 @@ Create a service that accepts the necessary information and sends emails. It sho
 I create a service(focus on backend) that sends the email to the recipient by taking the emails of recipient and sender, the subject and content as inputs.
 It is backed by Sendgrid and Mailgun. It always try to use Sendgrid first, and if there's anything wrong, it tried to use Mailgun to send the email.
 
-## Installation for Development
+## Installation Email Service for Development
 
 * Install Docker
 * Build docker images by: ```docker-compose build```
 * Put the Sendgrid API key, mailgun API key and the base API url into the ```.env``` file. You can get those by creating free account on [sendgrid](https://sendgrid.com/) and [mailgun](http://www.mailgun.com)
 * You can run it locally by ```docker-compose up```  and you can access it on http://127.0.0.1:8080/
+
+## Installation Email Service for Production
+
+* Install Docker
+* Put the Sendgrid API key, mailgun API key and the base API url into the ```.env``` file. You can get those by creating free account on [sendgrid](https://sendgrid.com/) and [mailgun](http://www.mailgun.com)
+* Build docker images by: ```docker build -t emailserviceImage .```
+* Push docker images to Cluster.
 
 ## How to use this service
 
