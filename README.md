@@ -90,7 +90,8 @@ status code | message
 2           | to email address invalid
 3           | subject is empty
 4           | text is empty
-5           | all email sender failed
+5           | email provider configuration not complete
+6           | all email sender failed
 
 ## Testing
 
