@@ -24,6 +24,9 @@ func (f FakeEmailer) sendGrid(e *Email) (int, error) {
 	if f.SendGrid == "" {
 		err := errors.New("Error")
 		return 400, err
+	} else if f.SendGrid == "not configure" {
+		err := errors.New("email provider configuration not complete")
+		return 500, err
 	}
 
 	return 202, nil
@@ -153,8 +156,30 @@ func TestSendEmailFailWithBodyInvalid(t *testing.T) {
 
 }
 
-func TestSendEmailAllFail(t *testing.T) {
+func TestSendEmailFailWitWrongConfiguration(t *testing.T) {
 	expected := 5
+
+	f := FakeEmailer{
+		SendGrid: "not configure",
+	}
+
+	e := Email{
+		From:    "test@gmail.com",
+		To:      "test@gmail.com",
+		Subject: "tester",
+		Body:    "tester",
+	}
+
+	result, _ := Send(f, &e)
+
+	if !reflect.DeepEqual(expected, result) {
+		t.Fatalf("Expected %v but got %v", expected, result)
+	}
+
+}
+
+func TestSendEmailAllFail(t *testing.T) {
+	expected := 6
 	expectedMsg := "Emails failed in sending. The error message is as followed: Error"
 
 	f := FakeEmailer{}

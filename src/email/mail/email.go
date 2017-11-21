@@ -1,6 +1,7 @@
 package mail
 
 import (
+	"errors"
 	"log"
 	"os"
 
@@ -35,7 +36,8 @@ type Emailer interface {
 // 2       no valid to email address
 // 3       subject is empty
 // 4       text is empty
-// 5       all email sender failed
+// 5       email provider configuration not complete
+// 6       all email sender failed
 func Send(el Emailer, e *Email) (int, string) {
 
 	if e.From == "" {
@@ -66,15 +68,21 @@ func Send(el Emailer, e *Email) (int, string) {
 
 	if respCode == 202 {
 		return 0, "Success"
+	} else if respCode == 500 {
+		return 5, "Email provider configuration not complete"
 	}
-	return 5, "Emails failed in sending. The error message is as followed: " + err.Error()
+	return 6, "Emails failed in sending. The error message is as followed: " + err.Error()
 
 }
 
 // mailGun : This is the email sender using the MailGun implementation.
 // return 202 if the sending success
 // return 400 if the sending failed
+// return 500 if email provider configuration not complete
 func (el EmailInfoer) mailGun(e *Email) (int, error) {
+	if os.Getenv("MG_DOMAIN") == "" || os.Getenv("MG_API_KEY") != "" || os.Getenv("MG_PUBLIC_API_KEY") != "" {
+		return 500, errors.New("email provider configuration not complete")
+	}
 	mg := mailgun.NewMailgun(os.Getenv("MG_DOMAIN"), os.Getenv("MG_API_KEY"), os.Getenv("MG_PUBLIC_API_KEY"))
 	message := mailgun.NewMessage(
 		e.From,
@@ -87,13 +95,17 @@ func (el EmailInfoer) mailGun(e *Email) (int, error) {
 		log.Println(err)
 		statusCode = 400
 	}
-	return statusCode, nil
+	return statusCode, err
 }
 
 // sendGrid : This is the email sender using the SendGrid implementation.
 // return 202 if the sending success
 // return 400 if the sending failed
+// return 500 if email provider configuration not complete
 func (el EmailInfoer) sendGrid(e *Email) (int, error) {
+	if os.Getenv("SG_API_KEY") == "" {
+		return 500, errors.New("email provider configuration not complete")
+	}
 	sg := sendgrid.NewSendClient(os.Getenv("SG_API_KEY"))
 	from := helpers.NewEmail(e.From, e.From)
 	subject := e.Subject
@@ -101,9 +113,11 @@ func (el EmailInfoer) sendGrid(e *Email) (int, error) {
 	plainTextContent := e.Body
 	htmlContent := e.Body
 	message := helpers.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
-	response, err := sg.Send(message)
+	_, err := sg.Send(message)
+	statusCode := 202
 	if err != nil {
 		log.Println(err)
+		statusCode = 400
 	}
-	return response.StatusCode, nil
+	return statusCode, err
 }
