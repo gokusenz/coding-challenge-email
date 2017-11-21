@@ -9,7 +9,7 @@ Create a service that accepts the necessary information and sends emails. It sho
 ## Solution
 
 I create a service(focus on backend) that sends the email to the recipient by taking the emails of recipient and sender, the subject and content as inputs.
-It is backed by Mailgun and Sendgrid. It always try to use Mailgun first, and if there's anything wrong, it tried to use Sendgrid to send the email.
+It is backed by Sendgrid and Mailgun. It always try to use Sendgrid first, and if there's anything wrong, it tried to use Mailgun to send the email.
 
 ## Installation/Deployment
 
@@ -22,7 +22,7 @@ It is backed by Mailgun and Sendgrid. It always try to use Mailgun first, and if
 
 The service APIs are RESTful APIs.
 
-The main API calls should be made with HTTP POST. (Help API can be called with GET)
+The main API calls should be made with HTTP POST.
 Any non-0 status code in HTTP response code is an error. The returned message tells more detailed information.
 
 ### Main API
