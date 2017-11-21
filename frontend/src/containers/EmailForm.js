@@ -19,7 +19,16 @@ export class EmailForm extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
     console.log(e.target.to.value);
-    Request.post(SERVICE_CREATE_LOG, data)
+    var data = {
+      to: e.target.to.value,
+      from: e.target.from.value,
+      cc: e.target.cc.value,
+      bcc: e.target.bcc.value,
+      subject: e.target.subject.value,
+      body: e.target.body.value,
+    }
+    Request.put("http://localhost:8080/email", data)
+    .then(resp => console.log(resp))
     .catch(err => console.log(err));
     // if (result) {
     //   alert('บันทึกข้อมูลเรียบร้อย')
