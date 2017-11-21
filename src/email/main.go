@@ -50,6 +50,7 @@ func emailHandler(rw http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
 		var e *mail.Email
 		if r.Body == nil {
+			log.Printf("Please send a request body")
 			http.Error(rw, "Please send a request body", 400)
 			return
 		}
@@ -67,6 +68,7 @@ func emailHandler(rw http.ResponseWriter, r *http.Request) {
 		rw.Write([]byte(respMsg))
 
 	} else {
+		log.Printf("Invalid request method")
 		http.Error(rw, "Invalid request method", http.StatusMethodNotAllowed)
 	}
 
