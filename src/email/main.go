@@ -44,7 +44,7 @@ func indexHandler(rw http.ResponseWriter, r *http.Request) {
 
 // emailHandler
 func emailHandler(rw http.ResponseWriter, r *http.Request) {
-	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	rw.Header().Set("Access-Control-Allow-Origin", "https://coding-challenge-email.firebaseapp.com")
 	rw.Header().Set("Access-Control-Allow-Methods", "POST")
 	if r.Method == "POST" {
 		defer r.Body.Close()
@@ -63,7 +63,7 @@ func emailHandler(rw http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println(err)
 		}
-		log.Printf("[CODE] %v => %v", respCode, respMsg)
+		log.Printf("[CODE] %v : %v", respCode, respMsg)
 		rw.Write([]byte(respMsg))
 
 	} else {

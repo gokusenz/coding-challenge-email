@@ -58,11 +58,11 @@ func Send(el Emailer, e *Email) (int, string) {
 
 	respCode, err := el.sendGrid(e)
 	if err != nil {
-		log.Println(err)
+		log.Println("SendGrid failed. The error message is as followed: " + err.Error())
 		// Failover to another email service provider.
 		respCode, err = el.mailGun(e)
 		if err != nil {
-			log.Println(err)
+			log.Println("MailGun failed. The error message is as followed: " + err.Error())
 		}
 	}
 
