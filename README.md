@@ -3,7 +3,9 @@
 Email Service - for the coding challenge
 
 ## Demo
-[live site] (https://coding-challenge-email.firebaseapp.com)
+[Live site] (https://coding-challenge-email.firebaseapp.com)
+
+[Email service] (https://coding-challenge-email.igokuz.com)
 
 ## Problem
 
@@ -14,7 +16,7 @@ Create a service that accepts the necessary information and sends emails. It sho
 I create a service(focus on backend) that sends the email to the recipient by taking the emails of recipient and sender, the subject and content as inputs.
 It is backed by Sendgrid and Mailgun. It always try to use Sendgrid first, and if there's anything wrong, it tried to use Mailgun to send the email.
 
-## Installation/Deployment
+## Installation for Development
 
 * Install Docker
 * Build docker images by: ```docker-compose build```
@@ -105,7 +107,7 @@ Following are the scripts to test the service:
 ```bash
 curl -i -H "Content-Type: application/json" -X POST -d \
  '{"from":"nattawut.ru@gmail.com","to":"nattawut.ru@gmail.com", "subject":"test subject","text":"This is an test email."}' \
-  http://localhost:8080/email
+  https://http://coding-challenge-email.igokuz.com/email
 ```
 
 output:
