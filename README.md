@@ -107,7 +107,7 @@ Following are the scripts to test the service:
 ```bash
 curl -i -H "Content-Type: application/json" -X POST -d \
  '{"from":"nattawut.ru@gmail.com","to":"nattawut.ru@gmail.com", "subject":"test subject","text":"This is an test email."}' \
-  https://http://coding-challenge-email.igokuz.com/email
+  https://coding-challenge-email.igokuz.com/email
 ```
 
 output:
