@@ -15,6 +15,9 @@ func (f FakeEmailer) mailGun(e *Email) (int, error) {
 	if f.MailGun == "" {
 		err := errors.New("Error")
 		return 400, err
+	} else if f.MailGun == "not configure" {
+		err := errors.New("email provider configuration not complete")
+		return 500, err
 	}
 
 	return 202, nil
@@ -24,9 +27,6 @@ func (f FakeEmailer) sendGrid(e *Email) (int, error) {
 	if f.SendGrid == "" {
 		err := errors.New("Error")
 		return 400, err
-	} else if f.SendGrid == "not configure" {
-		err := errors.New("email provider configuration not complete")
-		return 500, err
 	}
 
 	return 202, nil
@@ -160,7 +160,7 @@ func TestSendEmailFailWitWrongConfiguration(t *testing.T) {
 	expected := 5
 
 	f := FakeEmailer{
-		SendGrid: "not configure",
+		MailGun: "not configure",
 	}
 
 	e := Email{

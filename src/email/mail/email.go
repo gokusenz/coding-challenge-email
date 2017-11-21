@@ -56,11 +56,11 @@ func Send(el Emailer, e *Email) (int, string) {
 		return 4, "Body invalid"
 	}
 
-	respCode, err := el.mailGun(e)
+	respCode, err := el.sendGrid(e)
 	if err != nil {
 		log.Println(err)
 		// Failover to another email service provider.
-		respCode, err = el.sendGrid(e)
+		respCode, err = el.mailGun(e)
 		if err != nil {
 			log.Println(err)
 		}
