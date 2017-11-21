@@ -2,11 +2,10 @@ version: '2'
 
 services:
 
-# ### Golang Container #########################################
+# ### Golang Container for Development #########################################
 
     email-service:
         build:
             context: .
         ports:
             - "8080:8080"
-            # - "443:443"
