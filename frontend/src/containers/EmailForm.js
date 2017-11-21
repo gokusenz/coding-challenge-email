@@ -25,11 +25,8 @@ export class EmailForm extends Component {
       subject: e.target.subject.value,
       body: e.target.body.value,
     }
-    Request.post("http://localhost:8080/email", data)
+    Request.post("/email", data)
     .then((resp) => {
-      e.target.to.value = '';
-      e.target.subject.value = '';
-      e.target.body.value = '';
       alert('Done');
       console.log(resp)
     }) 

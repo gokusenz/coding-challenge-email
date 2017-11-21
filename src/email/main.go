@@ -44,6 +44,8 @@ func indexHandler(rw http.ResponseWriter, r *http.Request) {
 
 // emailHandler
 func emailHandler(rw http.ResponseWriter, r *http.Request) {
+	rw.Header().Set("Access-Control-Allow-Origin", "*")
+	rw.Header().Set("Access-Control-Allow-Methods", "POST")
 	if r.Method == "POST" {
 		defer r.Body.Close()
 		var e *mail.Email
