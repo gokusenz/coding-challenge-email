@@ -10,13 +10,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func init() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-}
-
 func TestIndexHandler(t *testing.T) {
 	// Create a request to pass to our handler. We don't have any query parameters for now, so we'll
 	// pass 'nil' as the third parameter.
@@ -48,6 +41,10 @@ func TestIndexHandler(t *testing.T) {
 }
 
 func TestEmailHandlerSuccess(t *testing.T) {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 	var jsonStr = []byte(`{
 		"to":"gokusen.regis@gmail.com",
 		"from":"nattawut.ru@gmail.com",
